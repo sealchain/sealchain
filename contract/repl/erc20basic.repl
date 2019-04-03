@@ -1,0 +1,164 @@
+;;
+;; ERC20 contract model.
+;;
+
+;; setup environment with administrator and user keysets
+(env-data { "admin-keyset" { "keys" ["ADMIN"] },
+            "sarah-keyset" { "keys" ["SARAH"] },
+            "james-keyset" { "keys" ["JAMES"] }
+            } )
+;... and is signed by ADMIN key
+(env-keys ["ADMIN"])
+
+;define keyset to guard module
+(define-keyset 'admin-keyset (read-keyset "admin-keyset"))
+
+;define smart-contract code
+(defcontract erc20contract 'admin-keyset
+
+  (defevent transfer-event [^string from ^string to ^decimal amount])
+  (defevent approval-event [^string from ^string to ^decimal amount])
+
+  (defn get-keyset [key]
+    (if (= key "ADMIN")
+      (read-keyset "admin-keyset")
+      (if (= key "SARAH")
+        (read-keyset "sarah-keyset")
+        (read-keyset "james-keyset"))))
+
+  (defrecord balances
+    [^decimal balance
+     ^keyset keyset])
+
+  ;; use owner as id
+  (deftable balances-table ^{balances})
+
+  (defrecord allowance
+    [^decimal allowed
+     ^keyset owner
+     ^keyset spender])
+
+  ;; use (hash [sender receiver]) as id
+  (deftable allowance-table ^{allowance})
+
+  ;; (defn total-supply [] totalsupply) ;; for mintable
+  (defn- get-hash [owner spender]
+    (hash [owner spender]))
+  
+  (defn get-allowance [owner spender]
+    (with-default-read allowance-table
+      (get-hash owner spender)
+      { :allowed -1 }
+      { allowed :allowed }
+      allowed))
+
+  (defn- _transfer [from to amount use-own-key]
+    (with-read balances-table from { from-bal :balance , keyset :keyset }
+      (format "balance keyset: {} {}" [from-bal keyset])
+      (if use-own-key
+        (enforce-keyset keyset)
+        (enforce (= keyset (read-keyset "admin-keyset")) "Not Authorized"))
+      (with-read balances-table to { to-bal :balance }
+        (enforce (> amount 0.0) "Negative Transaction Amount")
+        (enforce (>= from-bal amount) "Insufficient Funds")
+        (update balances-table from
+                { :balance (- from-bal amount) })
+        (update balances-table to
+                { :balance (+ to-bal amount) })
+        (emit-event transfer-event {:from from :to to :amount amount})
+        (format "{} paid {} {}" [from to amount]))))
+
+  (defn create-account [address initial-balance keyset]
+    "Create a new account for ID with INITIAL-BALANCE funds, must be administrator."
+    (enforce-keyset 'admin-keyset)
+    (enforce (>= initial-balance 0.0) "Initial balances must be >= 0.")
+    (insert balances-table address
+            { :balance initial-balance, :keyset keyset }))
+
+  (defn balance-of [id]
+    "Only users or admin can read balance."
+    (with-read balances-table id
+      { balance :balance, keyset :keyset }
+      (enforce-one "Access denied"
+                   [(enforce-keyset keyset)
+                    (enforce-keyset 'admin-keyset)])
+      balance))
+
+  (defn transfer [to amount]
+    (_transfer (MSG_SENDER) to amount true))
+
+  (defn approve [spender amount]
+    (enforce-keyset 'admin-keyset) ;; only admin can approve
+    (format "{} allowed {} {}" [(MSG_SENDER) spender (get-allowance (MSG_SENDER) spender)])
+    (let [allowed (get-allowance (MSG_SENDER) spender)]
+     (if (= -1 allowed)
+       (insert allowance-table
+               (get-hash (MSG_SENDER) spender)
+               { :allowed amount, :owner (get-keyset (MSG_SENDER)), :spender (get-keyset spender) })
+       (update allowance-table
+               (get-hash (MSG_SENDER) spender)
+               { :allowed (+ allowed amount), :owner (get-keyset (MSG_SENDER)), :spender (get-keyset spender) })))
+
+    (emit-event approval-event {:from (MSG_SENDER) :to spender :amount amount})
+    true)
+
+  (defn transfer-from [from to amount]
+    (let [allowed    (get-allowance from (MSG_SENDER))
+          new-amount (- allowed amount)]
+      (enforce (>= new-amount 0.0) "Negative Allowance Amount")
+      (update allowance-table
+              (get-hash from (MSG_SENDER))
+              { :allowed new-amount })
+      (_transfer from to amount false)
+      true))
+)
+
+;define table
+;; (create-table total-supply)
+(create-table balances-table)
+(create-table allowance-table)
+
+;create accounts
+(create-account "SARAH" 100.25 (read-keyset "sarah-keyset"))
+(create-account "JAMES" 250.0 (read-keyset "james-keyset"))
+(create-account "ADMIN" 2000.0 (read-keyset "admin-keyset"))
+
+;; do payment, simluating SARAH keyset.
+(env-keys ["SARAH"])
+
+;; ==> this should error
+;;(_transfer "Sarah" "James" 20.0)
+;;(_transfer "Sarah" "James" 20.0)
+
+;; <==
+;; (transfer-from "Sarah" "James" 25.0)
+(format "Sarah's balance is {}" [(balance-of "SARAH")])
+(transfer "JAMES" 100.0) ;; (MSG_SENDER) is Sarah
+(format "Sarah's balance is {}" [(balance-of "SARAH")])
+
+;; read James' balance as JAMES
+(env-keys ["JAMES"])
+(format "JAMES" [])
+(format "James's balance is {}" [(balance-of "JAMES")])
+
+(env-keys ["ADMIN"])
+(format "ADMIN" [])
+(approve "SARAH" 1000.0)
+(format "Admin's balance is {}" [(balance-of "ADMIN")])
+(format "Sarah's balance is {}" [(balance-of "SARAH")])
+(format "Admin allowed Sarah {}" [(get-allowance "ADMIN" "SARAH")])
+
+(env-keys ["SARAH"])
+(format "SARAH" [])
+(transfer-from "ADMIN" "JAMES" 100.0)
+(transfer-from "ADMIN" "JAMES" 800.0)
+;; (transfer-from "Admin" "James" 800.0) ;; should fail
+
+(env-keys ["ADMIN"])
+(format "James's balance is {}(Should be 1250.0)" [(balance-of "JAMES")])
+(format "Admin's balance is {}(Should be 1100.0)" [(balance-of "ADMIN")])
+
+;; (env-keys ["JAMES"])
+;; (format "JAMES" [])
+;; (transfer "Admin" 100.0)
+;; (format "James's balance is {}" [(balance-of "James")])

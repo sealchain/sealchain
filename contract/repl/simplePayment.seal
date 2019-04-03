@@ -1,0 +1,49 @@
+;define smart-contract code
+
+(defcontract payments 'admin-keyset
+
+  (defrecord payments
+    [^decimal balance
+    ^keyset keyset])
+
+  (defevent testevent
+    [^string key
+    ^string name])
+
+  (deftable payments-table ^{payments})
+
+  ;;(deftable payments-table2 ^{testevent})
+
+
+  (defn create-account [id initial-balance keyset]
+    "Create a new account for ID with INITIAL-BALANCE funds, must be administrator."
+    (enforce-keyset 'admin-keyset)
+    (enforce (>= initial-balance 0.0) "Initial balances must be >= 0.")
+    (insert payments-table id
+            { :balance initial-balance,
+            :keyset keyset }))
+
+  (defn get-balance [id]
+    "Only users or admin can read balance."
+    (emit-event testevent {:key "key1", :name "name"})
+    (with-read payments-table id
+      { balance :balance, keyset :keyset }
+      (enforce-one "Access denied"
+                   [(enforce-keyset keyset)
+                   (enforce-keyset 'admin-keyset)])
+      balance)
+      )
+
+  (defn pay [from to amount]
+    (with-read payments-table from { from-bal :balance , keyset :keyset }
+      (enforce-keyset keyset)
+      (with-read payments-table to { to-bal :balance }
+        (enforce (> amount 0.0) "Negative Transaction Amount")
+        (enforce (>= from-bal amount) "Insufficient Funds")
+        (update payments-table from
+                { :balance (- from-bal amount) })
+        (update payments-table to
+                { :balance (+ to-bal amount) })
+        (format "{} paid {} {}" [from to amount]))))    
+
+)

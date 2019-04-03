@@ -1,0 +1,63 @@
+name:                seal-x509
+version:             2.0.0
+synopsis:            Tool-suite for generating x509 certificates specialized for RSA with SHA-256
+description:         See README
+license:             MIT
+license-file:        LICENSE
+category:            Data
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  default-language:   Haskell2010
+  default-extensions: DeriveGeneric
+                      NoImplicitPrelude
+                      OverloadedStrings
+                      TupleSections
+                      TypeApplications
+
+  hs-source-dirs:     src
+
+  build-depends: base >=4.7 && <5
+               , aeson
+               , asn1-encoding
+               , asn1-types
+               , base64-bytestring
+               , bytestring
+               , cryptonite
+               , data-default-class
+               , directory
+               , filepath
+               , hourglass
+               , ip
+               , optparse-applicative
+               , text
+               , universum
+               , unordered-containers
+               , x509
+               , x509-store
+               , x509-validation
+               , yaml
+
+  exposed-modules: Data.X509.Extra
+                   Seal.X509.Configuration
+
+test-suite seal-x509-test
+  default-language:   Haskell2010
+  default-extensions: DeriveGeneric
+                      NoImplicitPrelude
+                      OverloadedStrings
+                      TupleSections
+                      TypeApplications
+
+  type:               exitcode-stdio-1.0
+
+  hs-source-dirs:     test
+  main-is:            Main.hs
+  other-modules:      Test.Seal.X509.Configuration.Arbitrary
+
+  build-depends:      base
+                    , QuickCheck
+                    , seal-x509
+                    , universum

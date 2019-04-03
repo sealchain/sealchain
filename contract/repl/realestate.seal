@@ -1,0 +1,108 @@
+;;
+;; RealEstate contract model, version II.
+;;
+
+
+(defcontract realestateContract admin-address
+
+  (defevent transfer-event [^address from ^address to ^string token-id])
+  
+  (defrecord realestate
+      [^decimal total-shares
+       ^decimal available-shares
+       ^decimal curr-price
+       ^address creator
+       ^address cfo])
+
+  (deftable realestate-table ^{realestate}) ;; key: ^string token-id
+
+  (defrecord stakeholder
+      [^address owner
+       ^decimal shares])
+
+  (deftable stakeholder-table ^{stakeholder}) ;; key: ^string (hash token-id holder)
+
+  (defn create-realestate
+    [token-id total-shares buy-price sell-price cfo]
+    (let [me (MSG_SENDER)]
+      (enforce (= admin-address me) "need admin")
+      (insert realestate-table token-id
+              {:buy-price       buy-price
+               :sell-price sell-price
+               :total-shares     total-shares
+               :available-shares total-shares
+               :creator          me
+               :cfo              cfo})))
+
+  (defn total-shares [token-id]
+    (with-read realestate-table token-id
+      {shares :total-shares}
+      shares))
+  
+  (defn available-shares [token-id]
+    (with-read realestate-table token-id
+      {shares :available-shares}
+      shares))
+
+  (defn change-price [token-id buy-price sell-price]
+    (enforce (= admin-address (MSG_SENDER)) "need admin")
+    (update realestate-table token-id
+            {:buy-price buy-price :sell-price sell-price}))
+
+  (defn- upsert-add [table key field amount]
+    (with-default-read table key {field -1} {old-amount field}
+      (if (= -1 old-amount)
+        (insert table key {field amount})
+        (update table key {field (+ amount old-amount)}))))
+
+  (defn buy-shares [token-id shares]
+    (enforce (>= shares 300) "Invalid Shares")
+    (with-read realestate-table token-id
+      {buy-price :buy-price
+       available-shares :available-shares
+       cfo :cfo}
+      (enforce (>= available-shares shares) "Insufficient Available Shares")
+      (let [cost (* buy-price shares)
+            me (MSG_SENDER)
+            id (get-hash token-id me)]
+        (send cfo me cost)
+        (upsert-add stakeholder-table id :shares shares)
+        (update realestate-table token-id {:available-shares (- available-shares shares)}))))
+
+  (defn sell-shares [token-id shares]
+    (let [me (MSG_SENDER)
+          id (get-hash token-id me)]
+      (with-default-read realestate-table token-id
+        {sell-price       :sell-price
+         available-shares :available-shares
+         cfo              :cfo}
+        (with-default-read stakeholder-table id
+          {:shares -1}
+          {owner :owner hold-shares :shares}
+          ;; (enforce (= owner me) "wrong owner")
+          (enforce (not= (-1 hold-shares)))
+          (enforce (>= hold-shares shares) "Not Enough Shares")
+          (send me cfo (* curr-price shares))
+          (update realestate-table token-id {:available-shares (+ available-shares shares)})
+          (update stakeholder-table id {:shares (- hold-shares shares)})))))
+
+  (defn shares-of [token-id]
+    (let [me (MSG_SENDER)]
+      (with-read stakeholder-table (get-hash token-id me)
+        {shares :shares}
+        shares)))
+
+  (defn dividend-one [per-share id]
+    (with-read
+      stakeholder-table id
+      {id :id owner :owner shares :shares}
+      (if (= id (get-hash token-id me))
+        (send owner (MSG_SENDER) (* per-share shares)))))
+  
+  (defn dividend [token-id per-share]
+    (with-read realestate-table token-id
+      {total-shares :total-shares}
+      (let [per-share (/ amount total-shares)]
+        (map (dividend-one per-share) (keys stakeholder-table)))))
+
+  )

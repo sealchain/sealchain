@@ -1,0 +1,50 @@
+
+;USD Ledger
+(defcontract paymentsUSD 'module-keyset
+
+  (deftable payments-tableUSD)
+
+  (defn create-accountUSD [id initial-balance]
+    "Create a new account for ID with INITIAL-BALANCE funds"
+    (insert payments-tableUSD id { :balance initial-balance }))
+
+  (defn debitUSD [from amount]
+    (with-read payments-tableUSD from { from-bal :balance }
+        (enforce (>= from-bal amount) "Insufficient Funds")
+        (update payments-tableUSD from
+                { :balance (- from-bal amount) })
+        (format "{} debited {}" [from amount])))
+)
+
+;create USD Ledger table
+(create-table payments-tableUSD)
+(create-accountUSD "Sarah" 100.00)
+
+;JPY Ledger
+(defcontract paymentsJPY 'module-keyset
+
+  (deftable payments-tableJPY)
+
+  (defn create-accountJPY [id initial-balance]
+    "Create a new account for ID with INITIAL-BALANCE funds"
+    (insert payments-tableJPY id { :balance initial-balance }))
+
+  (defn creditJPY [to amount]
+    (with-read payments-tableJPY to { to-bal :balance }
+      (update payments-tableJPY to
+              { :balance (+ to-bal amount) })
+      (format "{} credited {}" [to amount])))
+)
+
+;create JPY Ledger
+(create-table payments-tableJPY)
+(create-accountJPY "James" 0.0)
+
+;Cross Border Transfer Specification
+(defcontract cross-border 'module-keyset
+  (defn transfer-usd-to-jpy-accts [from to amountUSD fx-rate]
+    (let* [amountJPY (* amountUSD fx-rate)]
+      (debitUSD from amountUSD)
+      (creditJPY to amountJPY)
+      (format "{} transfered ${} USD to {} at the rate of {}" [from amountUSD to fx-rate])))
+)

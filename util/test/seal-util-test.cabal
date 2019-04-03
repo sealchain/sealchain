@@ -1,0 +1,86 @@
+name:                seal-util-test
+version:             1.0.0
+synopsis:            Seal - general utilities (tests)
+description:         QuickCheck Arbitrary instances for the Seal general
+                     utilities package.
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  exposed-modules:
+                       Test.Seal.Util.Base16
+                       Test.Seal.Util.Gen
+                       Test.Seal.Util.Golden
+                       Test.Seal.Util.Modifier
+                       Test.Seal.Util.Orphans
+                       Test.Seal.Util.Parallel.Parallelize
+                       Test.Seal.Util.QuickCheck
+                       Test.Seal.Util.QuickCheck.Property
+                       Test.Seal.Util.QuickCheck.Arbitrary
+                       Test.Seal.Util.Tripping
+
+  build-depends:       QuickCheck
+                     , aeson
+                     , aeson-pretty
+                     , attoparsec
+                     , base
+                     , base16-bytestring
+                     , bytestring
+                     , canonical-json
+                     , seal-util
+                     , cereal
+                     , cryptonite
+                     , directory
+                     , file-embed
+                     , filepath
+                     , formatting
+                     , hedgehog
+                     , hspec
+                     , mtl
+                     , pretty-show
+                     , quickcheck-instances
+                     , safecopy
+                     , tagged
+                     , template-haskell
+                     , text
+                     , time-units
+                     , universum
+                     , unordered-containers
+
+  default-language:    Haskell2010
+
+  default-extensions:  DeriveDataTypeable
+                       DeriveGeneric
+                       DeriveFunctor
+                       DeriveFoldable
+                       DeriveTraversable
+                       GeneralizedNewtypeDeriving
+                       StandaloneDeriving
+                       FlexibleContexts
+                       FlexibleInstances
+                       MultiParamTypeClasses
+                       FunctionalDependencies
+                       DefaultSignatures
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       TypeApplications
+                       TupleSections
+                       ViewPatterns
+                       LambdaCase
+                       MultiWayIf
+                       ConstraintKinds
+                       UndecidableInstances
+                       BangPatterns
+                       TemplateHaskell
+                       ScopedTypeVariables
+                       MonadFailDesugaring
+                       GADTs
+
+  ghc-options:         -Wall
+                       -O2
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp

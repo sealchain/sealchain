@@ -1,0 +1,301 @@
+name:                seal-core
+version:             1.0.0
+synopsis:            Seal - core
+description:         Seal - core
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+flag asserts
+  default:     True
+  manual:      True
+
+library
+  hs-source-dirs:      src
+  exposed-modules:
+                       Seal.Core
+                       Seal.Core.Aeson
+                       Seal.Core.Binary
+                       Seal.Core.Chrono
+                       Seal.Core.Limits
+
+                       Seal.Core.ProtocolConstants
+
+                       Seal.Core.NetworkAddress
+
+                       Seal.Core.NetworkMagic
+
+                       Seal.Core.Common
+                       Seal.Core.Constants
+                       Seal.Core.Context
+
+                       -- JsonLog (moved from networking in
+                       -- the `sinbin` shuffle). All modules
+                       -- must be exposed so that `networking`
+                       -- can import & re-export them.
+                       Seal.Core.JsonLog
+                       Seal.Core.JsonLog.CanJsonLog
+                       Seal.Core.JsonLog.Event
+                       Seal.Core.JsonLog.JsonLogT
+                       Seal.Core.JsonLog.LogEvents
+
+                       -- Concurrency operations, previously
+                       -- in `Mockable`.
+                       Seal.Core.Conc
+
+                       Seal.Core.Reporting
+
+                       Seal.Core.Slotting
+
+                       Seal.Core.Util.LogSafe
+                       Seal.Core.Util.TimeLimit
+
+                       Seal.Core.Attributes
+                       Seal.Core.Exception
+                       Seal.Core.Merkle
+
+                       Seal.Core.Metrics.Constants
+
+                       -- Reporting
+                       Seal.Core.Reporting.Report
+                       Seal.Core.Common.Account
+
+
+  other-modules:
+                       -- Aeson
+                       Seal.Core.Aeson.Orphans
+
+                       -- Binary
+                       Seal.Core.Binary.Orphans
+
+                       -- Common
+                       Seal.Core.Common.AddrAttributes
+                       Seal.Core.Common.Address
+                       Seal.Core.Common.AddressHash
+                       Seal.Core.Common.AddrSpendingData
+                       Seal.Core.Common.AddrStakeDistribution
+                       Seal.Core.Common.BlockCount
+                       Seal.Core.Common.ChainDifficulty
+                       Seal.Core.Common.Coeff
+                       Seal.Core.Common.Coin
+                       Seal.Core.Common.CoinPortion
+                       Seal.Core.Common.Currency
+                       Seal.Core.Common.GoldCoin
+                       Seal.Core.Common.GoldDollar
+                       Seal.Core.Common.CoinGroup
+                       Seal.Core.Common.AddrCategory
+                       Seal.Core.Common.AccountState
+                       Seal.Core.Common.Cmd
+                       Seal.Core.Common.SharedSeed
+                       Seal.Core.Common.SlotLeaders
+                       Seal.Core.Common.StakeholderId
+                       Seal.Core.Common.Stakes
+                       Seal.Core.Common.TxFeePolicy
+                       Seal.Core.Common.TxSizeLinear
+
+                       -- Context
+                       Seal.Core.Context.PrimaryKey
+
+                       -- Slotting
+                       Seal.Core.Slotting.EpochIndex
+                       Seal.Core.Slotting.EpochOrSlot
+                       Seal.Core.Slotting.LocalSlotIndex
+                       Seal.Core.Slotting.SlotCount
+                       Seal.Core.Slotting.SlotId
+                       Seal.Core.Slotting.TimeDiff
+                       Seal.Core.Slotting.Timestamp
+                       Seal.Core.Slotting.Class
+                       Seal.Core.Slotting.MemState
+                       Seal.Core.Slotting.Types
+                       Seal.Core.Slotting.Util
+
+                       -- Reporting
+                       Seal.Core.Reporting.MemState
+                       Seal.Core.Reporting.Methods
+                       Seal.Core.Reporting.Metrics
+
+  build-depends:       aeson
+                     , aeson-options
+                     , ansi-terminal
+                     , base
+                     , base58-bytestring
+                     , bytestring
+                     , Cabal
+                     , canonical-json
+                     , seal-binary
+                     , seal-crypto
+                     , seal-util
+                     , cborg
+                     , cereal
+                     , containers
+                     , cryptonite
+                     , data-default
+                     , deepseq
+                     , deriving-compat
+                     , ekg-core
+                     , ether >= 0.5
+                     , exceptions
+                     , extra
+                     , filepath
+                     , fmt
+                     , formatting
+                     , hashable
+                     , lens
+                     , parsec
+                     , memory
+                     , mmorph
+                     , monad-control
+                     , mtl
+                     , random
+                     , reflection
+                     , resourcet
+                     , safecopy
+                     , safe-exceptions
+                     , safecopy
+                     , serokell-util
+                     , servant >= 0.8.1
+                     , stm
+                     , template-haskell
+                     , text
+                     , th-lift-instances
+                     , time
+                     , time-units
+                     , transformers
+                     , transformers-base
+                     , transformers-lift
+                     , universum
+                     , unliftio
+                     , unliftio-core
+                     , unordered-containers
+
+  default-language:    Haskell2010
+
+  default-extensions:  DeriveDataTypeable
+                       DeriveGeneric
+                       GeneralizedNewtypeDeriving
+                       StandaloneDeriving
+                       FlexibleContexts
+                       FlexibleInstances
+                       MultiParamTypeClasses
+                       FunctionalDependencies
+                       DefaultSignatures
+                       InstanceSigs
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       RankNTypes
+                       TypeApplications
+                       TypeFamilies
+                       TupleSections
+                       ViewPatterns
+                       LambdaCase
+                       MultiWayIf
+                       ConstraintKinds
+                       UndecidableInstances
+                       BangPatterns
+                       TemplateHaskell
+                       ScopedTypeVariables
+                       MonadFailDesugaring
+
+  ghc-options:
+                       -O2
+                       -Wall
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+  if flag(asserts)
+    cpp-options: -DASSERTS_ON
+
+test-suite core-test
+  main-is:             test.hs
+  hs-source-dirs:      test
+  default-language:    Haskell2010
+  type:                exitcode-stdio-1.0
+
+  other-modules:
+                       Spec
+                       Test.Seal.Core.AddressSpec
+                       Test.Seal.Core.Bi
+                       Test.Seal.Core.CborSpec
+                       Test.Seal.Core.Chrono
+                       Test.Seal.Core.ChronoSpec
+                       Test.Seal.Core.CoinSpec
+                       Test.Seal.Core.ExampleHelpers
+                       Test.Seal.Core.Gen
+                       Test.Seal.Core.Json
+                       Test.Seal.Core.LimitsSpec
+                       Test.Seal.Core.SafeCopy
+                       Test.Seal.Core.SeedSpec
+                       Test.Seal.Core.SlottingSpec
+
+                       Test.Seal.Core.Arbitrary
+                       Test.Seal.Core.Arbitrary.Slotting
+                       Test.Seal.Core.Arbitrary.Unsafe
+                       Test.Seal.Core.Dummy
+
+  build-depends:       base
+                     , bytestring
+                     , sealchain-crypto
+                     , seal-binary
+                     , seal-binary-test
+                     , seal-core
+                     , seal-crypto
+                     , seal-crypto-test
+                     , seal-util
+                     , seal-util-test
+                     , containers
+                     , cryptonite
+                     , formatting
+                     , generic-arbitrary
+                     , hedgehog
+                     , hspec
+                     , pvss
+                     , QuickCheck
+                     , quickcheck-instances
+                     , random
+                     , safecopy
+                     , serokell-util >= 0.1.3.4
+                     , text
+                     , time-units
+                     , universum >= 0.1.11
+                     , unordered-containers
+
+  ghc-options:
+                       -threaded
+                       -rtsopts
+                       -Wall
+
+
+  -- linker speed up for linux
+  if os(linux)
+    ghc-options:       -optl-fuse-ld=gold
+    ld-options:        -fuse-ld=gold
+
+  default-extensions:   DeriveDataTypeable
+                        DeriveGeneric
+                        GeneralizedNewtypeDeriving
+                        StandaloneDeriving
+                        FlexibleContexts
+                        FlexibleInstances
+                        MultiParamTypeClasses
+                        FunctionalDependencies
+                        DefaultSignatures
+                        NoImplicitPrelude
+                        OverloadedStrings
+                        TypeApplications
+                        TupleSections
+                        ViewPatterns
+                        LambdaCase
+                        MultiWayIf
+                        ConstraintKinds
+                        UndecidableInstances
+                        BangPatterns
+                        TemplateHaskell
+                        ScopedTypeVariables
+                        GADTs
+                        MonadFailDesugaring
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp

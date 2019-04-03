@@ -1,0 +1,221 @@
+name:                seal-util
+version:             2.0.0
+synopsis:            Seal - general utilities
+description:         This package contains utility functions not specific
+                     to Seal which extend 3rd party libraries or implement
+                     something from scratch.
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:
+                       Seal.Util
+
+                       Seal.Util.CompileInfo
+
+                       Seal.Util.Concurrent
+                       Seal.Util.Concurrent.PriorityLock
+                       Seal.Util.Concurrent.RWLock
+
+                       Seal.Util.AssertMode
+                       Seal.Util.Filesystem
+                       Seal.Util.Future
+                       Seal.Util.Json.Canonical
+                       Seal.Util.Json.Parse
+                       Seal.Util.Justify
+                       Seal.Util.Lens
+                       Seal.Util.Log
+                       Seal.Util.Log.Internal
+                       Seal.Util.Log.LogSafe
+                       Seal.Util.Log.LoggerConfig
+                       Seal.Util.Log.LoggerName
+                       Seal.Util.Log.Severity
+                       Seal.Util.Log.Structured
+                       Seal.Util.Wlog.Compatibility
+                       Seal.Util.LoggerName
+                       Seal.Util.LRU
+                       Seal.Util.Modifier
+                       Seal.Util.Orphans
+                       Seal.Util.OptParse
+                       Seal.Util.Queue
+                       Seal.Util.Some
+                       Seal.Util.Timer
+                       Seal.Util.Trace
+                       Seal.Util.Trace.Unstructured
+                       Seal.Util.Trace.Named
+                       Seal.Util.Util
+                       Seal.Util.Wlog
+                       Seal.Util.Log.Rotator
+
+  other-modules:
+                       Paths_seal_util
+                       Seal.Util.CompileInfoGit
+                       Seal.Util.Log.Scribes
+
+  build-depends:       aeson
+                     , auto-update
+                     , base
+                     , canonical-json
+                     , cborg
+                     , cereal
+                     , containers
+                     , concurrent-extra
+                     , contravariant
+                     , cryptonite
+                     , deepseq
+                     , directory
+                     , ether
+                     , exceptions
+                     , file-embed
+                     , filepath
+                     , formatting
+                     , hashable
+                     , katip
+                     , lens
+                     , lrucache
+                     , megaparsec
+                     , mmorph
+                     , monad-control
+                     , mtl
+                     , optparse-applicative
+                     , parsec
+                     , process
+                     , reflection
+                     , resourcet
+                     , safe-exceptions
+                     , serokell-util
+                     , stm
+                     , tagged
+                     , template-haskell
+                     , text
+                     , time
+                     , time-units
+                     , transformers
+                     , transformers-base
+                     , transformers-lift
+                     , universum
+                     , unliftio-core
+                     , unordered-containers
+                     , yaml
+
+  default-language:    Haskell2010
+
+  default-extensions:  DeriveDataTypeable
+                       DeriveGeneric
+                       DeriveFunctor
+                       DeriveFoldable
+                       DeriveTraversable
+                       GeneralizedNewtypeDeriving
+                       StandaloneDeriving
+                       FlexibleContexts
+                       FlexibleInstances
+                       MultiParamTypeClasses
+                       FunctionalDependencies
+                       DefaultSignatures
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       TypeApplications
+                       TupleSections
+                       ViewPatterns
+                       LambdaCase
+                       MultiWayIf
+                       ConstraintKinds
+                       UndecidableInstances
+                       BangPatterns
+                       TemplateHaskell
+                       ScopedTypeVariables
+                       MonadFailDesugaring
+                       GADTs
+
+  ghc-options:         -Wall
+                       -O2
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+
+test-suite util-test
+  main-is:             test.hs
+  hs-source-dirs:      test
+  default-language:    Haskell2010
+  type:                exitcode-stdio-1.0
+
+  other-modules:
+                       Spec
+                       Test.Seal.Util.Golden
+                       Test.Seal.Util.LogSpec
+                       Test.Seal.Util.Modifier
+                       Test.Seal.Util.ModifierSpec
+                       Test.Seal.Util.Parallel.Parallelize
+                       Test.Seal.Util.QuickCheck.Property
+                       Test.Seal.Util.TimerSpec
+                       Test.Seal.Util.TraceSpec
+                       Test.Seal.Util.Tripping
+                       Test.Seal.Util.WlogSpec
+                       Test.Seal.Util.LogStructuredSpec
+
+  build-depends:       aeson
+                     , aeson-pretty
+                     , base
+                     , bytestring
+                     , async
+                     , canonical-json
+                     , seal-util
+                     , cereal
+                     , directory
+                     , file-embed
+                     , filepath
+                     , formatting
+                     , hedgehog
+                     , hspec
+                     , pretty-show
+                     , QuickCheck
+                     , quickcheck-instances
+                     , safecopy
+                     , stm
+                     , template-haskell
+                     , text
+                     , time
+                     , time-units
+                     , universum >= 1.1.0
+                     , unordered-containers
+
+  ghc-options:         -threaded
+                       -rtsopts
+                       -Wall
+
+  -- linker speed up for linux
+  if os(linux)
+    ghc-options:       -optl-fuse-ld=gold
+    ld-options:        -fuse-ld=gold
+
+  default-extensions:   DeriveDataTypeable
+                        DeriveGeneric
+                        GeneralizedNewtypeDeriving
+                        StandaloneDeriving
+                        FlexibleContexts
+                        FlexibleInstances
+                        MultiParamTypeClasses
+                        FunctionalDependencies
+                        DefaultSignatures
+                        NoImplicitPrelude
+                        OverloadedStrings
+                        TypeApplications
+                        TupleSections
+                        ViewPatterns
+                        LambdaCase
+                        MultiWayIf
+                        ConstraintKinds
+                        UndecidableInstances
+                        BangPatterns
+                        TemplateHaskell
+                        ScopedTypeVariables
+                        GADTs
+                        MonadFailDesugaring
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp

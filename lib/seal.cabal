@@ -1,0 +1,442 @@
+name:                seal
+version:             1.0.0
+synopsis:            Seal main implementation
+description:         Please see README.md
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  exposed-modules:      Paths_seal
+
+                        Seal.AllSecrets
+
+                        -- Arbitrary instances
+                        Seal.Binary
+                        Seal.Context
+                        Seal.Communication
+                        Seal.Configuration
+                        Seal.Constants
+
+                        Seal.DB.DB
+
+                        -- Diffusion layer
+                        Seal.Diffusion.Full
+                        Seal.Diffusion.Full.Block
+                        Seal.Diffusion.Full.Delegation
+                        Seal.Diffusion.Full.Ssc
+                        Seal.Diffusion.Full.Txp
+                        Seal.Diffusion.Full.Update
+
+                        -- GState
+                        Seal.GState
+
+                        -- Logic layer
+                        Seal.Logic.Types
+                        Seal.Logic.Full
+                        Seal.Logic.Pure
+
+                        -- Behavior
+                        Seal.Behavior
+
+                        -- Launcher
+                        Seal.Launcher
+                        Seal.Launcher.Configuration
+                        Seal.Launcher.Resource
+                        Seal.Launcher.Runner
+
+                        -- Listener
+                        Seal.Listener.Delegation
+                        Seal.Listener.Txp
+                        Seal.Listener.Update
+
+                        -- Network
+                        Seal.Network.Update.Download
+                        Seal.Network.Block.Logic
+                        Seal.Network.Block.Retrieval
+                        Seal.Network.Block.RetrievalQueue
+                        Seal.Network.Block.Types
+                        Seal.Network.Block.WorkMode
+
+                        Seal.Communication.Limits
+                        Seal.Communication.Types
+
+                        -- Recovery
+                        Seal.Recovery
+                        Seal.Recovery.Types
+
+                        -- Client CLI
+                        Seal.Client.CLI
+                        Seal.Client.CLI.NodeOptions
+                        Seal.Client.CLI.Options
+                        Seal.Client.CLI.Params
+                        Seal.Client.CLI.Secrets
+                        Seal.Client.CLI.Util
+
+                        Seal.Reporting.Production
+
+                        -- Utilities/helpers
+                        Seal.Util.Config
+                        Seal.Util.OutboundQueue
+                        Seal.Util.UserKeyError
+                        Seal.Util.UserPublic
+                        Seal.Util.UserSecret
+
+                        Seal.Web
+                        Seal.Web.Api
+                        Seal.Web.Mode
+                        Seal.Web.Server
+                        Seal.Web.Types
+
+                        -- Worker, work mode
+                        Seal.Worker
+                        Seal.Worker.Block
+                        Seal.Worker.Delegation
+                        Seal.Worker.Ssc
+                        Seal.Worker.Update
+                        Seal.WorkMode
+                        Seal.WorkMode.Class
+
+                        -- Binary serialization
+                        Seal.Binary.Communication
+
+                        -- Exposed for tests
+                        Test.Seal.Helpers
+
+                        -- Util code for tests
+                        Test.Seal.Configuration
+
+                        Seal.Util.Servant
+
+
+  other-modules:
+                        -- NodeContext
+                        Seal.Context.Context
+
+                        -- GState
+                        Seal.GState.Context
+                        Seal.GState.GState
+
+                        -- Launcher
+                        Seal.Launcher.Launcher
+                        Seal.Launcher.Mode
+                        Seal.Launcher.Param
+                        Seal.Launcher.Scenario
+
+                        -- Network
+                        Seal.Communication.Server
+
+  build-depends:        base
+                      , QuickCheck
+                      , async
+                      , aeson >= 0.11.2.1
+                      , aeson-options
+                      , async
+                      , ansi-terminal
+                      , ansi-wl-pprint
+                      , bytestring
+                      , canonical-json
+                      , seal-binary
+                      , seal-binary-test
+                      , seal-chain
+                      , seal-core
+                      , seal-crypto
+                      , seal-crypto-test
+                      , seal-db
+                      , seal-infra
+                      , seal-networking
+                      , seal-util
+                      , conduit >= 1.2.8
+                      , constraints
+                      , containers
+                      , contravariant
+                      , cryptonite >= 0.23
+                      , data-default
+                      , directory
+                      , ekg-core
+                      , ekg
+                      , ether >= 0.5
+                      , exceptions
+                      , filelock >= 0.1.0.1
+                      , filepath
+                      , formatting
+                      , generic-arbitrary
+                      , hspec
+                      , http-client
+                      , http-client-tls
+                      , http-conduit
+                      , http-types
+                      , lens
+                      , lifted-async
+                      , memory
+                      , mmorph
+                      , monad-control
+                      , mtl
+                      , neat-interpolation
+                      , network
+                      , network-transport
+                      , optparse-applicative
+                      , parsec
+                      , pvss
+                      , random
+                      , reflection
+                      , safe-exceptions
+                      , serokell-util >= 0.1.3.4
+                      , servant >= 0.8.1
+                      , servant-client >= 0.8.1
+                      , servant-client-core >= 0.8.1
+                      , servant-server >= 0.8.1
+                      , servant-swagger
+                      , stm
+                      , streaming-commons
+                      , tagged
+                      , template-haskell
+                      , text
+                      , formatting
+                      , time
+                      , time-units
+                      , tls
+                      , transformers
+                      , universum >= 0.1.11
+                      , unliftio
+                      , unordered-containers
+                      , wai
+                      , warp
+                      , warp-tls
+                      , x509
+                      , x509-store
+                      , x509-validation
+                      , yaml
+                      -- https://issues.serokell.io/issue/DEVOPS-230
+                      , cpphs
+                      -- Required for common test modules
+                      , cborg
+
+  if !os(windows)
+    build-depends:      unix
+
+  if !os(windows) && !os(freebsd)
+     build-depends:      systemd
+
+  hs-source-dirs:       src
+  default-language:     Haskell2010
+  ghc-options:         -Wall
+                       -O2
+
+  default-extensions:   DeriveDataTypeable
+                        DeriveGeneric
+                        GeneralizedNewtypeDeriving
+                        StandaloneDeriving
+                        FlexibleContexts
+                        FlexibleInstances
+                        MultiParamTypeClasses
+                        FunctionalDependencies
+                        DefaultSignatures
+                        NoImplicitPrelude
+                        OverloadedStrings
+                        TypeApplications
+                        TupleSections
+                        ViewPatterns
+                        LambdaCase
+                        MultiWayIf
+                        ConstraintKinds
+                        UndecidableInstances
+                        BangPatterns
+                        TemplateHaskell
+                        ScopedTypeVariables
+                        GADTs
+                        MonadFailDesugaring
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+
+test-suite seal-test
+  main-is:             Test.hs
+  other-modules:
+                       -- Standard module with some magic
+                       Spec
+
+                       Test.Seal.Slotting.TypesSpec
+
+                       -- Ssc
+                       Test.Seal.Ssc.ComputeSharesSpec
+                       Test.Seal.Ssc.Identity.SafeCopySpec
+                       Test.Seal.Ssc.SeedSpec
+                       Test.Seal.Ssc.Toss.BaseSpec
+                       Test.Seal.Ssc.VssCertDataSpec
+                       Test.Seal.Ssc.Toss.PureSpec
+
+                       -- Everything else
+                       Test.Seal.Block.Arbitrary.Message
+                       Test.Seal.Block.CborSpec
+                       Test.Seal.Cbor.Arbitrary.UserPublic
+                       Test.Seal.Cbor.Arbitrary.UserSecret
+                       Test.Seal.Cbor.CborSpec
+                       Test.Seal.ConstantsSpec
+                       Test.Seal.Diffusion.BlockSpec
+                       Test.Seal.Genesis.CanonicalSpec
+                       Test.Seal.Launcher.ConfigurationSpec
+                       Test.Seal.Launcher.Json
+                       Test.Seal.MerkleSpec
+                       Test.Seal.Infra.Slotting.TypesSpec
+                       Test.Seal.Types.Identity.SafeCopySpec
+                       Test.Seal.Types.Identity.ShowReadSpec
+                       Test.Seal.Update.Identity.SafeCopySpec
+                       Test.Seal.Update.MemStateSpec
+                       Test.Seal.Update.PollSpec
+
+
+  type:                exitcode-stdio-1.0
+  build-depends:       QuickCheck
+                     , base
+                     , bytestring
+                     , sealchain-crypto
+                     , seal
+                     , seal-binary
+                     , seal-binary-test
+                     , seal-chain
+                     , seal-chain-test
+                     , seal-core
+                     , seal-core-test
+                     , seal-crypto
+                     , seal-crypto-test
+                     , seal-db
+                     , seal-db-test
+                     , seal-infra
+                     , seal-infra-test
+                     , seal-networking
+                     , seal-util
+                     , seal-util-test
+                     , conduit
+                     , containers
+                     , cryptonite
+                     , data-default
+                     , deepseq
+                     , extra
+                     , filelock
+                     , formatting
+                     , generic-arbitrary
+                     , hedgehog
+                     , hspec
+                     , lens
+                     , network-transport
+                     , network-transport-inmemory
+                     , pvss
+                     , random
+                     , reflection
+                     , serokell-util >= 0.1.3.4
+                     , tagged
+                     , text
+                     , time
+                     , time-units
+                     , universum >= 0.1.11
+                     , unordered-containers
+
+  hs-source-dirs:      test
+  default-language:    Haskell2010
+  ghc-options:         -threaded
+                       -rtsopts
+                       -Wall
+
+  -- linker speed up for linux
+  if os(linux)
+    ghc-options:       -optl-fuse-ld=gold
+    ld-options:        -fuse-ld=gold
+
+  default-extensions:   DeriveDataTypeable
+                        DeriveGeneric
+                        GeneralizedNewtypeDeriving
+                        StandaloneDeriving
+                        FlexibleContexts
+                        FlexibleInstances
+                        MultiParamTypeClasses
+                        FunctionalDependencies
+                        DefaultSignatures
+                        NoImplicitPrelude
+                        OverloadedStrings
+                        TypeApplications
+                        TupleSections
+                        ViewPatterns
+                        LambdaCase
+                        MultiWayIf
+                        ConstraintKinds
+                        UndecidableInstances
+                        BangPatterns
+                        TemplateHaskell
+                        ScopedTypeVariables
+                        GADTs
+                        MonadFailDesugaring
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+
+benchmark seal-bench-criterion
+  hs-source-dirs:      bench
+  main-is:             Local/Criterion.hs
+  other-modules:       Bench.Seal.Criterion.FollowTheSatoshiBench
+                       Bench.Seal.Criterion.TxSigningBench
+                       Bench.Configuration
+                       Bench.Seal.Diffusion.BlockDownload
+  type:                exitcode-stdio-1.0
+  build-depends:       QuickCheck
+                     , base
+                     , bytestring
+                     , seal
+                     , seal-chain
+                     , seal-chain-test
+                     , seal-core
+                     , seal-core-test
+                     , seal-crypto
+                     , seal-crypto-test
+                     , seal-db
+                     , seal-infra
+                     , seal-networking
+                     , seal-util
+                     , seal-util-test
+                     , conduit
+                     , criterion
+                     , deepseq
+                     , formatting
+                     , network-transport
+                     , network-transport-inmemory
+                     , optparse-applicative
+                     , universum >= 0.1.11
+  default-language:    Haskell2010
+  ghc-options:         -threaded -rtsopts
+                       -Wall
+                       -O2
+
+  -- linker speed up for linux
+  if os(linux)
+    ghc-options:       -optl-fuse-ld=gold
+    ld-options:        -fuse-ld=gold
+
+  default-extensions:   DeriveDataTypeable
+                        DeriveGeneric
+                        GeneralizedNewtypeDeriving
+                        StandaloneDeriving
+                        FlexibleContexts
+                        FlexibleInstances
+                        MultiParamTypeClasses
+                        FunctionalDependencies
+                        DefaultSignatures
+                        NoImplicitPrelude
+                        OverloadedStrings
+                        TypeApplications
+                        TupleSections
+                        ViewPatterns
+                        LambdaCase
+                        MultiWayIf
+                        ConstraintKinds
+                        UndecidableInstances
+                        BangPatterns
+                        TemplateHaskell
+                        ScopedTypeVariables
+                        GADTs
+                        MonadFailDesugaring
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp

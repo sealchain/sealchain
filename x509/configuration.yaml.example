@@ -1,0 +1,21 @@
+dev:
+  tls:
+    ca:
+      organization: SEAL
+      commonName: SEALCHAIN Self-Signed Root CA
+      expiryDays: 3650
+
+    server:
+      organization: SEAL
+      commonName: SEALCHAIN Server Node
+      expiryDays: 365
+      altDNS:
+        - "localhost"
+        - "localhost.localdomain"
+        - "127.0.0.1"
+        - "::1"
+
+    clients:
+      - organization: SEAL
+        commonName: PC Wallet
+        expiryDays: 365

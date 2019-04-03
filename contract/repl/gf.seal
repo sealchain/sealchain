@@ -1,0 +1,108 @@
+;;
+;; GF contract model, version I.
+;;
+
+(defcontract gfContract admin-address
+
+  ;; events to be emitted, aggragated in logs
+  (defevent mint-event [^address who ^address to ^decimal amount])
+  (defevent burn-event [^address who ^address from ^decimal amount])
+  
+  (defrecord gf
+      [^decimal total-supply
+       ^decimal available-supply])
+
+  (defrecord balances
+      [^address owner
+       ^address token-id
+       ^decimal balance])
+
+  (deftable gf-table ^{gf})  ;; key ^address token-id
+  (create-table gf-table)
+
+  (deftable balances-table ^{balances})  ;; key (hash token-id owner)
+  (create-table balances-table)
+
+  (defn get-total-supply [token-id]
+    (with-default-read gf-table token-id
+      {:total-supply -1}
+      {total-supply total-supply}
+      (enforce (not= -1 total-supply) "not yet issued")
+      total-supply))
+
+  (defn get-available-supply [token-id]
+    (with-default-read gf-table token-id
+      {:available-supply -1}
+      {available-supply available-supply}
+      (enforce (not= -1 available-supply) "not yet issued")
+      available-supply))
+
+  (defn get-balance [token-id who]
+    (with-default-read balances-table (hash token-id who)
+      {:balance -1}
+      {balance :balance}
+      (enforce (not= -1 balance) "not have account")
+      balance))
+
+  (defn change-balance [token-id who]
+    (let [id (hash token-id who)]
+     (with-default-read balances-table id
+       {:balance 0}
+       {balance :balance}
+       (write balances-table id
+              {:owner    to
+               :token-id token-id
+               :balance  (+ balance amount)}))))
+
+  ;; APIs
+  
+  (defn issue [token-id init-supply]
+    (with-default-read gf-table token-id
+      {:total-supply -1}
+      {total-supply :total-supply}
+      (enforce (= -1 total-supply) "already issued")
+      (insert gf-table token-id {:total-supply init-supply
+                                 :available-supply init-supply})))
+
+  (defn buy [token-id amount who]
+    (let [me (MSG_SENDER)]
+      (enforce (= admin-address me) "need admin")
+      (with-default-read gf-table token-id
+        {:total-supply -1}
+        {total-supply :total-supply}
+        (enforce (not= total-supply -1) "not yet issued")
+        (update gf-table token-id {:total-supply     (+ total-supply amount)
+                                   :available-supply (+ available-supply amount)})
+        (change-balance token-id who amount)
+        (emit-event (mint-event {:who me :to who :amount amount})))))
+
+  (defn consume [token-id amount who]
+    (let [me (MSG_SENDER)]
+      (enforce (= admin-address me) "need admin")
+      (with-default-read gf-table token-id
+        {:total-supply -1}
+        {total-supply     :total-supply
+         available-supply :available-supply}
+        (enforce (not= total-supply -1) "not yet issued")
+        (enforce (>= available-supply amount) "Insufficient supply")
+        (update gf-table token-id {:total-supply     (- total-supply amount)
+                                   :available-supply (- available-supply amount)})
+        (change-balance token-id who (- 0 amount))
+        (emit-event (burn-event {:who me :from who :amount amount})))))
+
+)
+
+(let [token-id "xxxx"
+      init-supply 10000
+      user "yyyy"]
+
+  ;; as-admin
+  (issue token-id 10000)
+  (dispatch token-id 200 user)
+  (buy token-id 3000 user)
+  (consume token-id 200 user)
+  ;; (consume token-id 3100 user) ;; should error
+
+  ;; (buy token-id 11000 user) ;; should error
+  )
+

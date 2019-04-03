@@ -1,0 +1,61 @@
+name:                seal-node
+version:             1.0.0
+synopsis:            Seal simple node executable
+description:         Provides a 'seal-node-simple' executable which can
+                     connect to the seal network and act as a full node
+                     but does not have any wallet capabilities.
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+executable seal-node-simple
+  hs-source-dirs:      .
+  main-is:             Main.hs
+  build-depends:       base
+                     , seal-core
+                     , seal-chain
+                     , seal-db
+                     , seal-networking
+                     , seal-util
+                     , seal
+                     , universum >= 0.1.11
+  default-language:    Haskell2010
+  ghc-options:         -threaded -rtsopts
+                       -Wall
+                       -O2
+
+  -- linker speed up for linux
+  if os(linux)
+    ghc-options:       -optl-fuse-ld=gold
+    ld-options:        -fuse-ld=gold
+
+  default-extensions:   DeriveDataTypeable
+                        DeriveGeneric
+                        GeneralizedNewtypeDeriving
+                        StandaloneDeriving
+                        FlexibleContexts
+                        FlexibleInstances
+                        MultiParamTypeClasses
+                        FunctionalDependencies
+                        DefaultSignatures
+                        NoImplicitPrelude
+                        OverloadedStrings
+                        TypeApplications
+                        TupleSections
+                        ViewPatterns
+                        LambdaCase
+                        MultiWayIf
+                        ConstraintKinds
+                        UndecidableInstances
+                        BangPatterns
+                        TemplateHaskell
+                        ScopedTypeVariables
+                        GADTs
+                        MonadFailDesugaring
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+

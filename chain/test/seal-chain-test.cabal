@@ -1,0 +1,75 @@
+name:                seal-chain-test
+version:             1.0.0
+synopsis:            Seal - arbitrary instances for seal-chain
+description:         Seal - arbitrary instances for seal-chain
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  exposed-modules:     Test.Seal.Chain.Block.Arbitrary
+                       Test.Seal.Chain.Block.Arbitrary.Generate
+                       Test.Seal.Chain.Block.Bi
+                       Test.Seal.Chain.Block.Gen
+                       Test.Seal.Chain.Delegation.Arbitrary
+                       Test.Seal.Chain.Delegation.Example
+                       Test.Seal.Chain.Delegation.Gen
+                       Test.Seal.Chain.Genesis.Arbitrary
+                       Test.Seal.Chain.Genesis.Example
+                       Test.Seal.Chain.Genesis.Dummy
+                       Test.Seal.Chain.Genesis.Gen
+                       Test.Seal.Chain.Genesis.Json
+                       Test.Seal.Chain.Lrc.Arbitrary
+                       Test.Seal.Chain.Ssc.Arbitrary
+                       Test.Seal.Chain.Ssc.Example
+                       Test.Seal.Chain.Ssc.Gen
+                       Test.Seal.Chain.Ssc.Json
+                       Test.Seal.Chain.Txp.Arbitrary
+                       Test.Seal.Chain.Txp.Arbitrary.Unsafe
+                       Test.Seal.Chain.Txp.Bi
+                       Test.Seal.Chain.Txp.Example
+                       Test.Seal.Chain.Txp.Gen
+                       Test.Seal.Chain.Txp.Json
+                       Test.Seal.Chain.Update.Arbitrary
+                       Test.Seal.Chain.Update.Example
+                       Test.Seal.Chain.Update.Gen
+
+  build-depends:       aeson
+                     , base
+                     , base16-bytestring
+                     , bytestring
+                     , sealchain-crypto
+                     , seal-binary-test
+                     , seal-binary
+                     , seal-chain
+                     , seal-core
+                     , seal-core-test
+                     , seal-crypto
+                     , seal-crypto-test
+                     , seal-util
+                     , seal-util-test
+                     , containers
+                     , cryptonite
+                     , data-default
+                     , formatting
+                     , generic-arbitrary
+                     , hedgehog
+                     , pvss
+                     , QuickCheck
+                     , random
+                     , reflection
+                     , serokell-util
+                     , time-units
+                     , universum
+                     , unordered-containers
+                     , vector
+
+  default-language:    Haskell2010
+
+  default-extensions:  NoImplicitPrelude
+                       OverloadedStrings
+
+  ghc-options:         -Wall
+                       -O2

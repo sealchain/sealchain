@@ -1,0 +1,370 @@
+name:                seal-chain
+version:             1.0.0
+synopsis:            Seal - transaction processing
+description:         Seal - transaction processing
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:
+                       Seal.Chain.Block
+                       Seal.Chain.Contract
+                       Seal.Chain.Delegation
+                       Seal.Chain.Genesis
+                       Seal.Chain.Lrc
+                       Seal.Chain.Security
+                       Seal.Chain.Ssc
+                       Seal.Chain.Txp
+                       Seal.Chain.Update
+  other-modules:
+
+                       Seal.Chain.Block.Block
+                       Seal.Chain.Block.ComponentBlock
+                       Seal.Chain.Block.Configuration
+                       Seal.Chain.Block.Error
+                       Seal.Chain.Block.Genesis
+                       Seal.Chain.Block.HasPrevBlock
+                       Seal.Chain.Block.Header
+                       Seal.Chain.Block.IsHeader
+                       Seal.Chain.Block.JsonLog
+                       Seal.Chain.Block.Logic
+                       Seal.Chain.Block.Logic.Integrity
+                       Seal.Chain.Block.Main
+                       Seal.Chain.Block.Slog
+                       Seal.Chain.Block.Slog.Types
+                       Seal.Chain.Block.Types
+                       Seal.Chain.Block.Util
+
+                       Seal.Chain.Contract.Classes
+                       Seal.Chain.Contract.Builtin
+                       Seal.Chain.Contract.Repl
+                       Seal.Chain.Contract.Lib
+                       Seal.Chain.Contract.Types
+                       Seal.Chain.Contract.Native
+
+                       Seal.Chain.Delegation.Cede
+                       Seal.Chain.Delegation.Cede.Class
+                       Seal.Chain.Delegation.Cede.Types
+                       Seal.Chain.Delegation.Class
+                       Seal.Chain.Delegation.Configuration
+                       Seal.Chain.Delegation.HeavyDlgIndex
+                       Seal.Chain.Delegation.LightDlgIndices
+                       Seal.Chain.Delegation.Payload
+                       Seal.Chain.Delegation.Proof
+                       Seal.Chain.Delegation.Types
+
+                       -- Genesis
+                       Seal.Chain.Genesis.AvvmBalances
+                       Seal.Chain.Genesis.Config
+                       Seal.Chain.Genesis.Data
+                       Seal.Chain.Genesis.Delegation
+                       Seal.Chain.Genesis.Generate
+                       Seal.Chain.Genesis.Hash
+                       Seal.Chain.Genesis.Initializer
+                       Seal.Chain.Genesis.NonAvvmBalances
+                       Seal.Chain.Genesis.ProtocolConstants
+                       Seal.Chain.Genesis.Spec
+                       Seal.Chain.Genesis.WStakeholders
+                       Seal.Chain.Genesis.Issuers
+
+                       Seal.Chain.Txp.Configuration
+                       Seal.Chain.Txp.Base
+                       Seal.Chain.Txp.Error
+                       Seal.Chain.Txp.Topsort
+                       Seal.Chain.Txp.GenesisUtxo
+                       Seal.Chain.Txp.Toil
+                       Seal.Chain.Txp.Toil.Failure
+                       Seal.Chain.Txp.Toil.Logic
+                       Seal.Chain.Txp.Toil.Monad
+                       Seal.Chain.Txp.Toil.Stakes
+                       Seal.Chain.Txp.Toil.Types
+                       Seal.Chain.Txp.Toil.Verify
+                       Seal.Chain.Txp.Toil.Util
+                       Seal.Chain.Txp.Toil.VerifySum
+                       Seal.Chain.Txp.Tx
+                       Seal.Chain.Txp.TxAttributes
+                       Seal.Chain.Txp.TxAux
+                       Seal.Chain.Txp.TxMsg
+                       Seal.Chain.Txp.TxOutAux
+                       Seal.Chain.Txp.TxPayload
+                       Seal.Chain.Txp.TxProof
+                       Seal.Chain.Txp.TxWitness
+                       Seal.Chain.Txp.Undo
+
+                       Seal.Chain.Lrc.Fts
+                       Seal.Chain.Lrc.Types
+                       Seal.Chain.Lrc.Error
+                       Seal.Chain.Lrc.Core
+                       Seal.Chain.Lrc.Genesis
+                       Seal.Chain.Lrc.RichmenComponent
+
+                       Seal.Chain.Security.Params
+                       Seal.Chain.Security.Util
+
+                       Seal.Chain.Ssc.Base
+                       Seal.Chain.Ssc.Behavior
+                       Seal.Chain.Ssc.Commitment
+                       Seal.Chain.Ssc.CommitmentAndOpening
+                       Seal.Chain.Ssc.CommitmentsMap
+                       Seal.Chain.Ssc.Configuration
+                       Seal.Chain.Ssc.Error
+                       Seal.Chain.Ssc.Error.Seed
+                       Seal.Chain.Ssc.Error.Verify
+                       Seal.Chain.Ssc.Functions
+                       Seal.Chain.Ssc.Mem
+                       Seal.Chain.Ssc.Message
+                       Seal.Chain.Ssc.Opening
+                       Seal.Chain.Ssc.OpeningsMap
+                       Seal.Chain.Ssc.Payload
+                       Seal.Chain.Ssc.Proof
+                       Seal.Chain.Ssc.Seed
+                       Seal.Chain.Ssc.Shares
+                       Seal.Chain.Ssc.SharesDistribution
+                       Seal.Chain.Ssc.SharesMap
+                       Seal.Chain.Ssc.Toss
+                       Seal.Chain.Ssc.Toss.Logic
+                       Seal.Chain.Ssc.Toss.Pure
+                       Seal.Chain.Ssc.Toss.Base
+                       Seal.Chain.Ssc.Toss.Class
+                       Seal.Chain.Ssc.Toss.Types
+                       Seal.Chain.Ssc.Types
+                       Seal.Chain.Ssc.VssCertData
+                       Seal.Chain.Ssc.VssCertificate
+                       Seal.Chain.Ssc.VssCertificatesMap
+
+                       Seal.Chain.Update.ApplicationName
+                       Seal.Chain.Update.BlockVersion
+                       Seal.Chain.Update.BlockVersionData
+                       Seal.Chain.Update.BlockVersionModifier
+                       Seal.Chain.Update.Configuration
+                       Seal.Chain.Update.Constants
+                       Seal.Chain.Update.Data
+                       Seal.Chain.Update.Params
+                       Seal.Chain.Update.Payload
+                       Seal.Chain.Update.Poll
+                       Seal.Chain.Update.Poll.Class
+                       Seal.Chain.Update.Poll.Modifier
+                       Seal.Chain.Update.Poll.Types
+                       Seal.Chain.Update.Poll.Failure
+                       Seal.Chain.Update.Proof
+                       Seal.Chain.Update.SoftforkRule
+                       Seal.Chain.Update.SoftwareVersion
+                       Seal.Chain.Update.SystemTag
+                       Seal.Chain.Update.Vote
+
+  build-depends:       base
+                     , Cabal
+                     , aeson
+                     , aeson-options
+                     , array
+                     , bytestring
+                     , canonical-json
+                     , seal-binary
+                     , seal-core
+                     , seal-crypto
+                     , seal-util
+                     , seal-mpt
+                     , seal-contract
+                     , binary
+                     , base16-bytestring
+                     , nibblestring
+                     , cborg
+                     , cereal
+                     , conduit
+                     , containers
+                     , cryptonite
+                     , rocksdb-haskell-ng
+                     , data-default
+                     , deepseq
+                     , ekg-core
+                     , ether
+                     , exceptions
+                     , extra
+                     , filepath
+                     , fmt >= 0.4
+                     , formatting
+                     , free
+                     , hashable
+                     , lens
+                     , lrucache
+                     , memory
+                     , mtl
+                     , mmorph
+                     , mono-traversable
+                     , neat-interpolation
+                     , parsec
+                     , safecopy
+                     , safe-exceptions
+                     , serokell-util
+                     , reflection
+                     , template-haskell
+                     , text
+                     , time
+                     , time-units
+                     , formatting
+                     , transformers
+                     , universum
+                     , unordered-containers
+                     --seal-contract
+                     , string-qq
+                     , trifecta
+                     , criterion
+                     , statistics
+                     , bound
+
+  default-language:    Haskell2010
+
+  default-extensions:  DeriveDataTypeable
+                       DeriveGeneric
+                       GeneralizedNewtypeDeriving
+                       StandaloneDeriving
+                       FlexibleContexts
+                       FlexibleInstances
+                       MultiParamTypeClasses
+                       FunctionalDependencies
+                       DefaultSignatures
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       TypeApplications
+                       TupleSections
+                       ViewPatterns
+                       LambdaCase
+                       MultiWayIf
+                       ConstraintKinds
+                       UndecidableInstances
+                       BangPatterns
+                       TemplateHaskell
+                       ScopedTypeVariables
+                       MonadFailDesugaring
+
+  ghc-options:         -Wall
+                       -O2
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+
+test-suite chain-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             test.hs
+
+  other-modules:       Spec
+                       Test.Seal.Chain.Block.Arbitrary
+                       Test.Seal.Chain.Block.Bi
+                       Test.Seal.Chain.Block.BlockSpec
+                       Test.Seal.Chain.Block.CborSpec
+                       Test.Seal.Chain.Block.Gen
+                       Test.Seal.Chain.Block.SafeCopySpec
+                       Test.Seal.Chain.Delegation.Arbitrary
+                       Test.Seal.Chain.Delegation.Bi
+                       Test.Seal.Chain.Delegation.Example
+                       Test.Seal.Chain.Delegation.Gen
+                       Test.Seal.Chain.Genesis.Dummy
+                       Test.Seal.Chain.Genesis.Example
+                       Test.Seal.Chain.Genesis.Gen
+                       Test.Seal.Chain.Genesis.Json
+                       Test.Seal.Chain.Lrc.FtsSpec
+                       Test.Seal.Chain.Ssc.Arbitrary
+                       Test.Seal.Chain.Ssc.Bi
+                       Test.Seal.Chain.Ssc.CborSpec
+                       Test.Seal.Chain.Ssc.Example
+                       Test.Seal.Chain.Ssc.Gen
+                       Test.Seal.Chain.Ssc.Json
+                       Test.Seal.Chain.Txp.Arbitrary
+                       Test.Seal.Chain.Txp.Arbitrary.Unsafe
+                       Test.Seal.Chain.Txp.Bi
+                       Test.Seal.Chain.Txp.CoreSpec
+                       Test.Seal.Chain.Txp.Gen
+                       Test.Seal.Chain.Txp.Json
+                       Test.Seal.Chain.Txp.Example
+                       Test.Seal.Chain.Txp.Toil.UtxoSpec
+                       Test.Seal.Chain.Update.Arbitrary
+                       Test.Seal.Chain.Update.Bi
+                       Test.Seal.Chain.Update.CborSpec
+                       Test.Seal.Chain.Update.Example
+                       Test.Seal.Chain.Update.Gen
+                       Test.Seal.Chain.Update.Json
+
+  build-depends:       base
+                     , aeson
+                     , base16-bytestring
+                     , bytestring
+                     , sealchain-crypto
+                     , seal-binary
+                     , seal-binary-test
+                     , seal-core
+                     , seal-core-test
+                     , seal-crypto
+                     , seal-crypto-test
+                     , seal-chain
+                     , seal-util
+                     , seal-util-test
+                     , containers
+                     , cryptonite
+                     , data-default
+                     , fmt
+                     , formatting
+                     , generic-arbitrary
+                     , hedgehog
+                     , hspec
+                     , lens
+                     , mtl
+                     , pvss
+                     , QuickCheck
+                     , random
+                     , serokell-util
+                     , formatting
+                     , time-units
+                     , universum
+                     , unordered-containers
+                     , vector
+  default-language:    Haskell2010
+  default-extensions:  NoImplicitPrelude
+                       OverloadedStrings
+
+  ghc-options:         -Wall
+
+benchmark block-bench
+  main-is:             block-bench.hs
+  hs-source-dirs:      bench test
+  default-language:    Haskell2010
+  type:                exitcode-stdio-1.0
+
+
+  other-modules:       Test.Seal.Chain.Block.Arbitrary
+                       Test.Seal.Chain.Block.Arbitrary.Generate
+                       Test.Seal.Chain.Delegation.Arbitrary
+                       Test.Seal.Chain.Genesis.Dummy
+                       Test.Seal.Chain.Ssc.Arbitrary
+                       Test.Seal.Chain.Txp.Arbitrary
+                       Test.Seal.Chain.Update.Arbitrary
+
+  ghc-options:         -Wall -O2
+  build-depends:       QuickCheck
+                     , base
+                     , bytestring
+                     , criterion >= 1.3.0.0
+                     , seal-binary
+                     , seal-chain
+                     , seal-crypto
+                     , seal-core
+                     , seal-core-test
+                     , seal-crypto-test
+                     , seal-util-test
+                     , data-default
+                     , deepseq
+                     , formatting
+                     , generic-arbitrary
+                     , lens
+                     , random
+                     , text
+                     , universum
+                     , unordered-containers
+                     , vector
+  default-extensions:  NoImplicitPrelude
+                       OverloadedStrings

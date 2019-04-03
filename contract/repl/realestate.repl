@@ -1,0 +1,117 @@
+;;
+;; RealEstate contract model.
+;;
+
+;; setup environment with administrator and user keysets
+(env-data { "admin-keyset" { "keys" ["ADMIN"] } } )
+;... and is signed by ADMIN key
+(env-keys ["ADMIN"])
+
+;define keyset to guard module
+(define-keyset 'admin-keyset (read-keyset "admin-keyset"))
+
+
+(defcontract realestateContract 'admin-keyset
+
+  (defevent transfer-event [^string from ^string to ^decimal amount])
+
+  (defrecord balances
+      [^decimal balance
+       ^string owner])
+
+  (deftable balances-table ^{balances})
+
+  (defn create-account [address initial-balance owner]
+    "Create a new account for ID with INITIAL-BALANCE funds, must be administrator."
+    (enforce-keyset 'admin-keyset)
+    (enforce (>= initial-balance 0.0) "Initial balances must be >= 0.")
+    (insert balances-table address
+            { :balance initial-balance, :owner owner }))
+
+  (defn balance-of [address]
+    "Only users or admin can read balance."
+    (with-read balances-table address
+      { balance :balance, keyset :keyset }
+      (enforce-one "Access denied"
+                   [(enforce-keyset address)
+                    (enforce-keyset 'admin-keyset)])
+      balance))
+
+  (defn- _transfer [from to amount]
+    (enforce (>= amount 0.0) "Negative Transaction Amount")
+    (with-read balances-table from { from-bal :balance owner :owner }
+      (with-read balances-table to { to-bal :balance }
+        (enforce (>= from-bal amount) "Insufficient Balance")
+        (update balances-table from
+                { :balance (- from-bal amount) })
+        (update balances-table to
+                { :balance (+ to-bal amount) })
+        (emit-event transfer-event {:from from :to to :amount amount}))))
+
+  (defrecord realestate
+      [^decimal totalSegments
+       ^decimal availableSegments
+       ^decimal currPrice
+       ^string admin ;; the main account of income
+       ;; ^string ownerKey ;; key of owner table record, (+ infoHash owner)
+       ])
+
+  (deftable realestate-table ^{realestate}) ;; key: ^string infoHash
+
+  (defrecord owner
+      [^string owner
+       ^decimal segments])
+
+  (deftable owner-table ^{owner}) ;; key: ^string ownerKey
+
+  (defn create-realestate
+    [infoHash totalSegments currPrice]
+    (enforce-keyset admin-keyset)
+    (insert realestate-table infoHash
+            {:currPrice currPrice :totalSegments totalSegments
+             :availableSegments totalSegments}))
+  
+  (defn available-segments [infoHash]
+    (with-read realestate-table infoHash
+      {availableSegments :availableSegments}
+      availableSegments))
+
+  (defn change-price [infoHash newPrice]
+    (enforce-keyset admin-keyset)
+    (update realestate-table infoHash {:currPrice newPrice}))
+
+  (defn upsert-add [table key field amount]
+    (with-default-read table key {field -1} {old-amount field}
+      (if (= -1 old-amount)
+        (insert table key {field amount})
+        (update table key {field (+ amount old-amount)}))))
+
+  (defn- get-hash [owner spender]
+    (hash [owner spender]))
+
+  (defn buy-segments [infoHash buyer buySegments]
+    (enforce (>= buySegments 300) "Invalid BuySegments")
+    (with-read realestate-table infoHash
+      {currPrice :currPrice
+       availableSegments :availableSegments
+       admin :admin
+       ;; ownerKey :ownerKey
+       }
+      (enforce (>= availableSegments buySegments) "Insufficient AvailableSegments")
+      (let [cost (* currPrice buySegments)]
+        (_transfer buyer admin cost))
+      (let [ownerKey (get-hash infoHash buyer)]
+       (upsert-add owner-table ownerKey :segments buySegments))))
+
+  (defn segments-of [infoHash owner]
+    (with-read owner-table (get-hash infoHash owner)
+      {segments :segments}
+      segments))
+
+  (defn dividend [infoHash from amount]
+    (enforce (= from admin))
+    ;; load all owners of infoHash from owner table
+    ;; HOW TO ??
+    )
+  
+  )

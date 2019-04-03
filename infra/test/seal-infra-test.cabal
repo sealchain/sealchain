@@ -1,0 +1,54 @@
+name:                seal-infra-test
+version:             1.0.0
+synopsis:            Seal - generators for seal-infra
+description:         This package contains generators for the infrastructural data types used in Seal.
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  exposed-modules:
+                       Test.Seal.Infra.Arbitrary
+                       Test.Seal.Infra.Arbitrary.Communication
+                       Test.Seal.Infra.Arbitrary.Slotting
+                       Test.Seal.Infra.Arbitrary.Ssc
+                       Test.Seal.Infra.Arbitrary.Txp
+                       Test.Seal.Infra.Arbitrary.Update
+                       Test.Seal.Infra.Bi
+                       Test.Seal.Infra.Diffusion.Subscription.StatusSpec
+                       Test.Seal.Infra.Diffusion.Subscription.SubscriptionSpec
+                       Test.Seal.Infra.Gen
+                       Test.Seal.Infra.Json
+
+  build-depends:       QuickCheck
+                     , async
+                     , base
+                     , bytestring
+                     , seal-binary-test
+                     , seal-chain
+                     , seal-chain-test
+                     , seal-core
+                     , seal-core-test
+                     , seal-crypto
+                     , seal-crypto-test
+                     , seal-infra
+                     , seal-networking
+                     , seal-util-test
+                     , containers
+                     , dns
+                     , generic-arbitrary
+                     , hedgehog
+                     , hspec
+                     , iproute
+                     , kademlia
+                     , universum
+
+  default-language:    Haskell2010
+
+  ghc-options:         -Wall
+                       -O2
+                       -threaded
+
+  default-extensions:  NoImplicitPrelude

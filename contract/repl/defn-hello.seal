@@ -1,0 +1,11 @@
+;; Define the module.
+(defcontract helloWorld 'admin-keyset
+  "A smart contract to greet the world."
+    
+  (defn- privateHello [name]
+    "Do the hello-world dance"
+    (format "Hello {}!This is private function" [name]))
+
+  (defn hello [name]
+    "Do the hello-world dance"
+    (format "Hello,now i invoke a private function! {}!" [(privateHello "world")])))

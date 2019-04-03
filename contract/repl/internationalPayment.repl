@@ -1,0 +1,9 @@
+(env-data { "keyset" { "keys" ["ABCD"] , "pred" "keys-all" } })
+(env-keys ["ABCD"])
+
+(define-keyset 'module-keyset (read-keyset "keyset"))
+
+(load "internationalPayment.seal")
+
+;do a transfer
+(transfer-usd-to-jpy-accts "Sarah" "James" 50.0 104.57)

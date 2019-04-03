@@ -1,0 +1,37 @@
+name:                seal-db-test
+version:             1.0.0
+synopsis:            Seal - arbitrary instances for seal-db
+description:         Seal - arbitrary instances for seal-db
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  exposed-modules:
+                       Test.Seal.DB.Update.Arbitrary
+                       Test.Seal.DB.Block.Arbitrary
+
+  other-modules:
+                       Test.Seal.DB.Update.Arbitrary.Poll
+                       Test.Seal.DB.Update.Arbitrary.MemState
+
+  build-depends:       QuickCheck
+                     , base
+                     , seal-binary
+                     , seal-chain
+                     , seal-chain-test
+                     , seal-core-test
+                     , seal-crypto-test
+                     , seal-db
+                     , seal-util-test
+                     , generic-arbitrary
+                     , universum
+                     , unordered-containers
+
+  default-language:    Haskell2010
+
+  ghc-options:         -Wall
+                       -fno-warn-orphans
+                       -O2

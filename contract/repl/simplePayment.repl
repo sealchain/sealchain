@@ -1,0 +1,34 @@
+;;
+;; Simple accounts model.
+;;
+
+;; setup environment with administrator and user keysets
+(env-data { "admin-keyset" { "keys" ["ADMIN"] },
+            "sarah-keyset" { "keys" ["SARAH"] },
+            "james-keyset" { "keys" ["JAMES"] }
+            } )
+;... and is signed by ADMIN key
+(env-keys ["ADMIN"])
+
+;define keyset to guard contract
+(define-keyset 'admin-keyset (read-keyset "admin-keyset"))
+
+(load "simplePayment.seal")
+
+;define table
+(create-table payments-table)
+
+;create accounts
+(create-account "Sarah" 100.25 (read-keyset "sarah-keyset"))
+(create-account "James" 250.0 (read-keyset "james-keyset"))
+
+
+;; do payment, simluating SARAH keyset.
+(env-keys ["SARAH"])
+
+(pay "Sarah" "James" 25.0)
+(format "Sarah's balance is {}" [(get-balance "Sarah")])
+
+;; read James' balance as JAMES
+(env-keys ["JAMES"])
+(format "James's balance is {}" [(get-balance "James")])

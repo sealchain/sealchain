@@ -1,0 +1,249 @@
+name:                seal-infra
+version:             1.0.0
+synopsis:            Seal - infrastructural
+description:         Seal - infrastructural
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  exposed-modules:
+                        -- Diffusion layer
+                        Seal.Infra.Diffusion.Transport.TCP
+                        Seal.Infra.Diffusion.Types
+                        Seal.Infra.Diffusion.Subscription.Common
+                        Seal.Infra.Diffusion.Subscription.Dns
+                        Seal.Infra.Diffusion.Subscription.Dht
+                        Seal.Infra.Diffusion.Subscription.Status
+                        Seal.Infra.Diffusion.Subscription.Subscriber
+
+                        -- Reporting
+                        Seal.Infra.Reporting
+                        Seal.Infra.Reporting.Ekg
+                        Seal.Infra.Reporting.Exceptions
+                        Seal.Infra.Reporting.Health.Types
+                        Seal.Infra.Reporting.Http
+                        Seal.Infra.Reporting.Methods
+                        Seal.Infra.Reporting.NodeInfo
+                        Seal.Infra.Reporting.Statsd
+                        Seal.Infra.Reporting.Wlog
+
+                        -- StateLock
+                        Seal.Infra.StateLock
+
+                        -- Slotting
+                        Seal.Infra.Slotting
+                        Seal.Infra.Slotting.Class
+                        Seal.Infra.Slotting.Impl
+                        Seal.Infra.Slotting.Impl.Simple
+                        Seal.Infra.Slotting.Impl.Util
+                        Seal.Infra.Slotting.Types
+                        Seal.Infra.Slotting.Error
+                        Seal.Infra.Slotting.Util
+
+                        -- Seal.Infra.DHT
+                        Seal.Infra.DHT
+                        Seal.Infra.DHT.Constants
+                        Seal.Infra.DHT.Model
+                        Seal.Infra.DHT.Model.Types
+                        Seal.Infra.DHT.Real
+                        Seal.Infra.DHT.Real.Real
+                        Seal.Infra.DHT.Real.Types
+                        Seal.Infra.DHT.Real.Param
+                        Seal.Infra.DHT.Real.CLI
+                        Seal.Infra.DHT.Workers
+
+                        -- Seal.Infra.Communication
+                        Seal.Infra.Communication.Constants
+                        Seal.Infra.Communication.Types.Protocol
+                        Seal.Infra.Communication.Types.Relay
+                        Seal.Infra.Communication.BiP
+                        Seal.Infra.Communication.Limits.Instances
+                        Seal.Infra.Communication.Listener
+                        Seal.Infra.Communication.Protocol
+                        Seal.Infra.Communication.Specs
+                        Seal.Infra.Communication.Relay
+                        Seal.Infra.Communication.Relay.Class
+                        Seal.Infra.Communication.Relay.Logic
+                        Seal.Infra.Communication.Relay.Types
+                        Seal.Infra.Communication.Relay.Util
+
+                        -- Fault injection
+                        Seal.Infra.InjectFail
+
+                        -- Health Checks
+                        Seal.Infra.HealthCheck.Route53
+
+                        -- Network topology
+                        Seal.Infra.Network.DnsDomains
+                        Seal.Infra.Network.Policy
+                        Seal.Infra.Network.Types
+                        Seal.Infra.Network.Yaml
+                        Seal.Infra.Network.CLI
+
+                        -- Recovery
+                        Seal.Infra.Recovery.Info
+                        Seal.Infra.Recovery.Types
+
+                        -- Seal.Infra.Shutdown
+                        Seal.Infra.Shutdown
+                        Seal.Infra.Shutdown.Class
+                        Seal.Infra.Shutdown.Logic
+                        Seal.Infra.Shutdown.Types
+
+                        -- Statistics
+                        Seal.Infra.Statistics
+                        Seal.Infra.Statistics.Ekg
+                        Seal.Infra.Statistics.Statsd
+
+                        -- Seal.Infra.Binary
+                        Seal.Infra.Binary
+                        Seal.Infra.Binary.DHTModel
+
+                        -- Seal.Util
+                        Seal.Infra.Util.JsonLog.Events
+                        Seal.Infra.Util.LogSafe
+                        Seal.Infra.Util.Monitor
+                        Seal.Infra.Util.TimeLimit
+                        Seal.Infra.Util.TimeWarp
+
+
+  other-modules:        Paths_seal_infra
+
+  build-depends:        aeson
+                      , async
+                      , base
+                      , parsec
+                      , base64-bytestring
+                      , bytestring
+                      , seal-binary
+                      , seal-chain
+                      , seal-core
+                      , seal-crypto
+                      , seal-db
+                      , seal-networking
+                      , seal-util
+                      , clock
+                      , conduit
+                      , containers
+                      , directory
+                      , dns
+                      , ekg-core
+                      , ekg-statsd
+                      , ekg-wai
+                      , ether >= 0.5
+                      , exceptions
+                      , filepath
+                      , formatting
+                      , hashable
+                      , http-client
+                      , http-client-tls
+                      , iproute
+                      , kademlia
+                      , lens
+                      , mtl
+                      , network-info
+                      , network-transport
+                      , network-transport-tcp
+                      , lzma-conduit
+                      , optparse-applicative
+                      , safe-exceptions
+                      , serokell-util >= 0.1.3.4
+                      , stm
+                      , tar
+                      , time
+                      , tagged
+                      , text
+                      , time-units
+                      , network-transport
+                      , universum
+                      , unliftio
+                      , unordered-containers
+                      , yaml
+
+  if !os(windows)
+    exposed-modules:   Seal.Infra.Util.SigHandler
+    build-depends:     unix
+
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+
+  default-extensions:  DeriveDataTypeable
+                       DeriveGeneric
+                       GeneralizedNewtypeDeriving
+                       StandaloneDeriving
+                       FlexibleContexts
+                       FlexibleInstances
+                       MultiParamTypeClasses
+                       FunctionalDependencies
+                       DefaultSignatures
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       TypeApplications
+                       TupleSections
+                       ViewPatterns
+                       LambdaCase
+                       MultiWayIf
+                       ConstraintKinds
+                       UndecidableInstances
+                       BangPatterns
+                       TemplateHaskell
+                       ScopedTypeVariables
+                       MonadFailDesugaring
+
+  ghc-options:         -Wall
+                       -O2
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+
+test-suite infra-test
+  main-is:          test.hs
+  hs-source-dirs:   test
+  default-language: Haskell2010
+  type:             exitcode-stdio-1.0
+
+  other-modules:    Spec
+                    Test.Seal.Infra.Arbitrary
+                    Test.Seal.Infra.Arbitrary.Communication
+                    Test.Seal.Infra.Arbitrary.Slotting
+                    Test.Seal.Infra.Arbitrary.Ssc
+                    Test.Seal.Infra.Arbitrary.Txp
+                    Test.Seal.Infra.Arbitrary.Update
+                    Test.Seal.Infra.Bi
+                    Test.Seal.Infra.Diffusion.Subscription.StatusSpec
+                    Test.Seal.Infra.Diffusion.Subscription.SubscriptionSpec
+                    Test.Seal.Infra.Gen
+                    Test.Seal.Infra.Json
+
+  build-depends:    QuickCheck
+                  , async
+                  , base
+                  , bytestring
+                  , seal-binary-test
+                  , seal-chain
+                  , seal-chain-test
+                  , seal-core
+                  , seal-core-test
+                  , seal-crypto
+                  , seal-crypto-test
+                  , seal-infra
+                  , seal-networking
+                  , seal-util-test
+                  , containers
+                  , dns
+                  , generic-arbitrary
+                  , hedgehog
+                  , hspec
+                  , iproute
+                  , kademlia
+                  , universum
+
+  ghc-options:         -Wall
+                       -O2
+                       -threaded
+
+  default-extensions:  NoImplicitPrelude

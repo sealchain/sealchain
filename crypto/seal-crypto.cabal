@@ -1,0 +1,170 @@
+name:                seal-crypto
+version:             1.0.0
+synopsis:            Seal - cryptography primitives
+description:         This package contains cryptography primitives used in Seal.
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  exposed-modules:
+                       Seal.Crypto
+
+                       Seal.Crypto.Configuration
+                       Seal.Crypto.Hashing
+                       Seal.Crypto.HD
+                       Seal.Crypto.Limits
+                       Seal.Crypto.Orphans
+                       Seal.Crypto.Random
+                       Seal.Crypto.SecretSharing
+                       Seal.Crypto.Signing
+                       Seal.Crypto.Signing.Redeem
+                       Seal.Crypto.Signing.Safe
+                       Seal.Crypto.Signing.Signing
+
+  other-modules:
+                       Seal.Crypto.Encryption
+                       Seal.Crypto.Scrypt
+
+                       Seal.Crypto.Signing.Check
+                       Seal.Crypto.Signing.Tag
+                       Seal.Crypto.Signing.Types
+                       Seal.Crypto.Signing.Types.Redeem
+                       Seal.Crypto.Signing.Types.Safe
+                       Seal.Crypto.Signing.Types.Signing
+                       Seal.Crypto.Signing.Types.Tag
+
+  build-depends:       aeson
+                     , base
+                     , binary
+                     , bytestring
+                     , canonical-json
+                     , sealchain-crypto
+                     , seal-binary
+                     , seal-util
+                     , cborg
+                     , cereal
+                     , cryptonite
+                     , cryptonite-openssl
+                     , data-default
+                     , formatting
+                     , hashable
+                     , lens
+                     , memory
+                     , mtl
+                     , pvss
+                     , reflection
+                     , safecopy
+                     , safe-exceptions
+                     , scrypt
+                     , serokell-util
+                     , text
+                     , formatting
+                     , universum
+                     , unordered-containers
+
+  default-language:    Haskell2010
+
+  default-extensions:  DeriveDataTypeable
+                       DeriveGeneric
+                       GeneralizedNewtypeDeriving
+                       StandaloneDeriving
+                       FlexibleContexts
+                       FlexibleInstances
+                       MultiParamTypeClasses
+                       FunctionalDependencies
+                       DefaultSignatures
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       TypeApplications
+                       TupleSections
+                       ViewPatterns
+                       LambdaCase
+                       MultiWayIf
+                       ConstraintKinds
+                       UndecidableInstances
+                       BangPatterns
+                       TemplateHaskell
+                       ScopedTypeVariables
+                       MonadFailDesugaring
+
+  ghc-options:         -Wall
+                       -O2
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+
+test-suite crypto-test
+  main-is:             test.hs
+  hs-source-dirs:      test
+  default-language:    Haskell2010
+  type:                exitcode-stdio-1.0
+
+  other-modules:
+                       Spec
+                       Test.Seal.Crypto.Bi
+                       Test.Seal.Crypto.Arbitrary
+                       Test.Seal.Crypto.Arbitrary.Unsafe
+                       Test.Seal.Crypto.CborSpec
+                       Test.Seal.Crypto.CryptoSpec
+                       Test.Seal.Crypto.CryptoSpec2
+                       Test.Seal.Crypto.Dummy
+                       Test.Seal.Crypto.Example
+                       Test.Seal.Crypto.Gen
+                       Test.Seal.Crypto.Json
+
+  build-depends:       QuickCheck
+                     , base
+                     , bytestring
+                     , sealchain-crypto
+                     , seal-binary
+                     , seal-binary-test
+                     , seal-crypto
+                     , seal-util
+                     , seal-util-test
+                     , cryptonite
+                     , formatting
+                     , generic-arbitrary
+                     , hedgehog
+                     , hspec
+                     , memory
+                     , quickcheck-instances
+                     , text
+                     , universum >= 0.1.11
+                     , unordered-containers
+
+  ghc-options:         -threaded
+                       -rtsopts
+                       -Wall
+
+  -- linker speed up for linux
+  if os(linux)
+    ghc-options:       -optl-fuse-ld=gold
+    ld-options:        -fuse-ld=gold
+
+  default-extensions:   DeriveDataTypeable
+                        DeriveGeneric
+                        GeneralizedNewtypeDeriving
+                        StandaloneDeriving
+                        FlexibleContexts
+                        FlexibleInstances
+                        MultiParamTypeClasses
+                        FunctionalDependencies
+                        DefaultSignatures
+                        NoImplicitPrelude
+                        OverloadedStrings
+                        TypeApplications
+                        TupleSections
+                        ViewPatterns
+                        LambdaCase
+                        MultiWayIf
+                        ConstraintKinds
+                        UndecidableInstances
+                        BangPatterns
+                        TemplateHaskell
+                        ScopedTypeVariables
+                        GADTs
+                        MonadFailDesugaring

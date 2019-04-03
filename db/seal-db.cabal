@@ -1,0 +1,227 @@
+name:                seal-db
+version:             1.0.0
+synopsis:            Seal - basic DB interfaces
+description:         Seal - basic DB interfaces
+license:             MIT
+license-file:        LICENSE
+category:            Currency
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Seal.DB
+                       Seal.DB.BatchOp
+                       Seal.DB.Class
+                       Seal.DB.Error
+                       Seal.DB.Functions
+                       Seal.DB.BlockIndex
+                       Seal.DB.GState.Common
+                       Seal.DB.GState.Lock
+                       Seal.DB.GState.Stakes
+                       Seal.DB.Misc.Common
+                       Seal.DB.Pure
+                       Seal.DB.Sum
+                       Seal.DB.Rocks
+                       Seal.DB.Rocks.Functions
+                       Seal.DB.Rocks.Types
+                      --  Seal.DB.Rocks.DB
+
+                       Seal.DB.Txp
+                       Seal.DB.Txp.Logic
+                       Seal.DB.Txp.MemState
+
+                       Seal.DB.Txp.Settings
+                       Seal.DB.Txp.Stakes
+                       Seal.DB.Txp.Utxo
+                       Seal.DB.Txp.Account
+                       Seal.DB.Txp.Pact
+
+                       Seal.DB.Lrc
+                       Seal.DB.Delegation
+                       Seal.DB.Ssc
+                       Seal.DB.Ssc.SecretStorage
+                       Seal.DB.Update
+                       Seal.DB.Block
+
+                       Seal.DB.Epoch.Index
+
+
+  other-modules:       Seal.DB.Txp.Logic.Common
+                       Seal.DB.Txp.Logic.Global
+                       Seal.DB.Txp.Logic.Local
+                       Seal.DB.Txp.MemState.Class
+                       Seal.DB.Txp.MemState.Holder
+                       Seal.DB.Txp.MemState.Metrics
+                       Seal.DB.Txp.MemState.Types
+
+                       Seal.DB.Lrc.Common
+                       Seal.DB.Lrc.Consumer
+                       Seal.DB.Lrc.Consumer.Delegation
+                       Seal.DB.Lrc.Consumer.Ssc
+                       Seal.DB.Lrc.Consumer.Update
+                       Seal.DB.Lrc.Consumer
+                       Seal.DB.Lrc.Consumers
+                       Seal.DB.Lrc.Context
+                       Seal.DB.Lrc.Issuers
+                       Seal.DB.Lrc.Leaders
+                       Seal.DB.Lrc.Lrc
+                       Seal.DB.Lrc.Mode
+                       Seal.DB.Lrc.RichmenBase
+                       Seal.DB.Lrc.Richmen
+                       Seal.DB.Lrc.Seed
+
+                       Seal.DB.Delegation.Cede.Holders
+                       Seal.DB.Delegation.Cede.Logic
+                       Seal.DB.Delegation.Core
+                       Seal.DB.Delegation.Logic.Common
+                       Seal.DB.Delegation.Logic.Mempool
+                       Seal.DB.Delegation.Logic.VAR
+                       Seal.DB.Delegation.Var
+
+                       Seal.DB.Ssc.GState
+                       Seal.DB.Ssc.Logic
+                       Seal.DB.Ssc.Logic.Global
+                       Seal.DB.Ssc.Logic.Local
+                       Seal.DB.Ssc.Logic.VAR
+                       Seal.DB.Ssc.State
+                       Seal.DB.Ssc.State.Global
+                       Seal.DB.Ssc.State.Local
+
+                       Seal.DB.Update.Context
+                       Seal.DB.Update.GState
+                       Seal.DB.Update.Logic
+                       Seal.DB.Update.MemState
+                       Seal.DB.Update.GState.Misc
+                       Seal.DB.Update.Logic.Global
+                       Seal.DB.Update.Logic.Local
+                       Seal.DB.Update.MemState.Functions
+                       Seal.DB.Update.MemState.Types
+                       Seal.DB.Update.Poll.DBPoll
+                       Seal.DB.Update.Poll.Logic
+                       Seal.DB.Update.Poll.PollState
+                       Seal.DB.Update.Poll.Pure
+                       Seal.DB.Update.Poll.Logic.Apply
+                       Seal.DB.Update.Poll.Logic.Base
+                       Seal.DB.Update.Poll.Logic.Normalize
+                       Seal.DB.Update.Poll.Logic.Rollback
+                       Seal.DB.Update.Poll.Logic.Softfork
+                       Seal.DB.Update.Poll.Logic.Version
+
+                       Seal.DB.Block.BListener
+                       Seal.DB.Block.Epoch
+                       Seal.DB.Block.GState.BlockExtra
+                       Seal.DB.Block.GState.SanityCheck
+                       Seal.DB.Block.Internal
+                       Seal.DB.Block.Load
+                       Seal.DB.Block.Logic.Creation
+                       Seal.DB.Block.Logic.Header
+                       Seal.DB.Block.Logic.Internal
+                       Seal.DB.Block.Logic.Util
+                       Seal.DB.Block.Logic.VAR
+                       Seal.DB.Block.Lrc
+                       Seal.DB.Block.Slog.Context
+                       Seal.DB.Block.Slog.Logic
+
+  build-depends:       aeson
+                     , base
+                     , base16-bytestring
+                     , binary
+                     , bytestring
+                     , nibblestring
+                     , seal-binary
+                     , seal-chain
+                     , seal-core
+                     , seal-crypto
+                     , seal-util
+                     , seal-contract
+                     , seal-rocksdb
+                     , seal-mpt
+                     , concurrent-extra
+                     , conduit
+                     , containers
+                     , cryptonite
+                     , data-default
+                     , directory
+                     , ekg-core
+                     , ether >= 0.5
+                     , exceptions
+                     , extra
+                     , filepath
+                     , formatting
+                     , lens
+                     , lrucache
+                     , memory
+                     , mmorph
+                     , mtl
+                     , resourcet
+                     , rocksdb-haskell-ng
+                     , safe-exceptions
+                     , serokell-util
+                     , stm
+                     , tagged
+                     , text
+                     , time-units
+                     , transformers
+                     , universum
+                     , unliftio
+                     , unordered-containers
+                     , utf8-string
+                     
+
+  default-language:    Haskell2010
+
+  default-extensions:  DeriveDataTypeable
+                       DeriveGeneric
+                       GeneralizedNewtypeDeriving
+                       StandaloneDeriving
+                       FlexibleContexts
+                       FlexibleInstances
+                       MultiParamTypeClasses
+                       FunctionalDependencies
+                       DefaultSignatures
+                       NoImplicitPrelude
+                       OverloadedStrings
+                       TypeApplications
+                       TupleSections
+                       ViewPatterns
+                       LambdaCase
+                       MultiWayIf
+                       ConstraintKinds
+                       UndecidableInstances
+                       BangPatterns
+                       TemplateHaskell
+                       ScopedTypeVariables
+                       MonadFailDesugaring
+
+  ghc-options:         -Wall
+                       -O2
+
+  build-tools: cpphs >= 1.19
+  ghc-options: -pgmP cpphs -optP --cpp
+
+test-suite db-test
+  hs-source-dirs:      test
+  main-is:             test.hs
+  other-modules:       Test.Seal.DB.Epoch.Index
+                       Test.Seal.DB.Functions
+                       Test.Seal.DB.Mode
+  type:                exitcode-stdio-1.0
+  build-depends:       base
+                     , seal-binary
+                     , seal-chain-test
+                     , seal-core
+                     , seal-core-test
+                     , seal-db
+                     , seal-util
+                     , seal-util-test
+                     , filepath
+                     , hedgehog
+                     , lens
+                     , temporary
+                     , universum
+  default-language:    Haskell2010
+  default-extensions:  NoImplicitPrelude
+                       OverloadedStrings
+  ghc-options:         -Wall
